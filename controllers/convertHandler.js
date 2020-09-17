@@ -14,7 +14,7 @@ function ConvertHandler() {
 
   const units = {
     'gal': {
-      convert_to: 'l',
+      convert_to: 'L',
       factor: galToL,
       name: 'gallons'
     },
