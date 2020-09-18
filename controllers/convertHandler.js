@@ -14,7 +14,7 @@ function ConvertHandler() {
 
   const units = {
     'gal': {
-      convert_to: 'L',
+      convert_to: 'l',
       factor: galToL,
       name: 'gallons'
     },
@@ -78,14 +78,14 @@ function ConvertHandler() {
     let match = input.match(/[a-z]+$/gi);
     
     if(match) {
-      let unit = match[0];
+      let unit = match[0].toLowerCase();
       // No unit has length greater than 3
       if(unit.length > 3) {
         return null;
       }
 
       // If unit exists, return it
-      if(units.hasOwnProperty(unit.toLowerCase())) {
+      if(units.hasOwnProperty(unit)) {
         return unit;
       }
     }
@@ -95,21 +95,22 @@ function ConvertHandler() {
   };
   
   this.getReturnUnit = function(initUnit) {
-    return units[initUnit.toLowerCase()].convert_to;
+    return units[initUnit].convert_to;
   };
 
   this.spellOutUnit = function(unit) {
-    return units[unit.toLowerCase()].name;
+    return units[unit].name;
   };
   
   this.convert = function(initNum, initUnit) {
-    return initNum * units[initUnit.toLowerCase()].factor;
+    // After converting, round to 5 digits
+    return parseFloat(( initNum * units[initUnit].factor).toFixed(5));
   };
   
   this.getString = function(initNum, initUnit, returnNum, returnUnit) {
 
-    
-    return `${initNum} ${units[initUnit.toLowerCase()].name} converts to ${returnNum.toFixed(5)} ${units[returnUnit].name}`;
+    return `${initNum} ${units[initUnit.toLowerCase()].name} ` +
+           `converts to ${returnNum.toFixed(5)} ${units[returnUnit].name}`;
   };
   
 }

@@ -103,7 +103,7 @@ suite('Unit Tests', function(){
       let input = ['gal','l','mi','km','lbs','kg'];
       let expect = ['l','gal','km','mi','kg','lbs'];
       input.forEach(function(ele, i) {
-        assert.equal(convertHandler.getReturnUnit(ele), expect[i]);
+        assert.equal(convertHandler.getReturnUnit(ele), expect[i].toLowerCase());
       });
       done();
     });
