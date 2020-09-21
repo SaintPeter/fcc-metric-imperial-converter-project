@@ -7,7 +7,7 @@
 */
 
 function ConvertHandler() {
-  let re_num_splitter = /(?<=\d)(?=[a-z])/ig
+  let re_units = /(?<=\d|^|\D)([a-z]{1,3})$/ig
   const galToL = 3.78541;
   const lbsToKg = 0.453592;
   const miToKm = 1.60934;
@@ -45,37 +45,60 @@ function ConvertHandler() {
     }};
 
   this.getNum = function(input) {
-    let result;
+    let re_div_splitter = /(?<=\d)\/(?=\d)/ig
+    let re_non_digits = /[^\d.\/]/ig
+    let re_number_check = /[^\d.]|\.{2,}/gi
+
+    // get and remove units
+    let noUnits = input.replace(re_units,'')
+
+    // No number passed
+    if(noUnits.length === 0) {
+      return 1;
+    }
+
+    // After we remove the units, if there are
+    // any non-number, period, or slash remaining
+    // then we have an invalid number
+    if(noUnits.match(re_non_digits)) {
+      return null;
+    }
 
     // Check for division
-    let parts = input.split(re_num_splitter);
+    // Valid division is a slash with a number
+    // before and after
+    let parts = noUnits.split(re_div_splitter);
     if(parts.length === 2) {
-      if(parts[0].match(/\//)) {
-        let fraction_parts = parts[0].split(/\//);
-        // Check for double fractions
-        if(fraction_parts.length > 2) {
-          return null;
-        }
-        let numerator = parseFloat(fraction_parts[0]);
-        let denominator = parseFloat(fraction_parts[1]);
+      if(parts[0].match(re_number_check) || parts[1].match(re_number_check)) {
+        return null;
+      }
+      // Division Present
+      try {
+        let numerator = parseFloat(parts[0]);
+        let denominator = parseFloat(parts[1]);
 
         // Catch divide by zero
         if(denominator === 0) {
           return null;
         }
         return numerator/denominator;
-      } else {
-        // No fractions
-        return parseFloat(parts[0])
+      } catch(e) {
+        return null;
+      }
+    } else {
+      if(noUnits.match(re_number_check)) {
+        return null;
+      }
+      try {
+        return parseFloat(noUnits)
+      } catch(e) {
+        return null;
       }
     }
-
-    // Can't find a part number split
-    return 1;
   };
   
   this.getUnit = function(input) {
-    let match = input.match(/[a-z]+$/gi);
+    let match = input.match(re_units);
     
     if(match) {
       let unit = match[0].toLowerCase();
