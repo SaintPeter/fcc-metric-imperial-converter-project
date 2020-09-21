@@ -65,11 +65,11 @@ suite('Unit Tests', function(){
     test('No Numerical Input', function(done) {
       let input = "lbs";
       assert.equal(convertHandler.getNum(input), 1);
-      input = "/lbs";
+      input = "lbs";
       assert.equal(convertHandler.getNum(input), 1);
-      input = ".km";
+      input = "km";
       assert.equal(convertHandler.getNum(input), 1);
-      input = "@#$lbs";
+      input = "lbs";
       assert.equal(convertHandler.getNum(input), 1);
       done();
     }); 
