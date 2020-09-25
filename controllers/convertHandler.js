@@ -7,7 +7,6 @@
 */
 
 function ConvertHandler() {
-  let re_units = /(?<=\d|^|\D)([a-z]{1,3})$/ig
   const galToL = 3.78541;
   const lbsToKg = 0.453592;
   const miToKm = 1.60934;
@@ -44,11 +43,20 @@ function ConvertHandler() {
       name: 'kilograms'
     }};
 
-  this.getNum = function(input) {
-    let re_div_splitter = /(?<=\d)\/(?=\d)/ig
-    let re_non_digits = /[^\d.\/]/ig
-    let re_number_check = /[^\d.]|\.{2,}/gi
+  // Takes a string in, gives a true/false out
+  this.numberChecker= function (num){
+    // Check for non-digits and non-periods
+    if(num.match(/[^0-9.]/gi)) {
+      return false;
+    }
 
+    // Check for doubled periods
+    let result = num.match(/\./gi);
+    return !(result && result.length > 1);
+  }
+
+  let re_units = /(?<=^|[^a-z])([a-z]+)$/ig
+  this.getNum = function(input) {
     // get and remove units
     let noUnits = input.replace(re_units,'')
 
@@ -57,19 +65,12 @@ function ConvertHandler() {
       return 1;
     }
 
-    // After we remove the units, if there are
-    // any non-number, period, or slash remaining
-    // then we have an invalid number
-    if(noUnits.match(re_non_digits)) {
-      return null;
-    }
-
     // Check for division
     // Valid division is a slash with a number
     // before and after
-    let parts = noUnits.split(re_div_splitter);
+    let parts = noUnits.split(/(?<=\d)\/(?=\d)/ig);
     if(parts.length === 2) {
-      if(parts[0].match(re_number_check) || parts[1].match(re_number_check)) {
+      if(!this.numberChecker(parts[0]) || !this.numberChecker(parts[1])) {
         return null;
       }
       // Division Present
@@ -86,14 +87,14 @@ function ConvertHandler() {
         return null;
       }
     } else {
-      if(noUnits.match(re_number_check)) {
-        return null;
+      if(this.numberChecker(noUnits)) {
+        try {
+          return parseFloat(noUnits)
+        } catch(e) {
+          return null;
+        }
       }
-      try {
-        return parseFloat(noUnits)
-      } catch(e) {
-        return null;
-      }
+      return null;
     }
   };
   
