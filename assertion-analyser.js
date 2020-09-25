@@ -102,10 +102,11 @@ function assertionAnalyser(body) {
   // replace assertions bodies, so that they cannot
   // contain the word 'assertion'
 
-  let result = body.match(/(?:browser\s*\.\s*)?assert\s*\.\s*\w*\([\s\S]*\)/);
-  if(result && Array.isArray(result)) {
-    body = result[0];
+  let cleanedBody = body.match(/(?:browser\s*\.\s*)?assert\s*\.\s*\w*\([\s\S]*\)/)
+  if(cleanedBody && Array.isArray(cleanedBody)) {
+    body = cleanedBody[0];
   } else {
+    // No assertions present
     return [];
   }
   let s = replacer(body);
