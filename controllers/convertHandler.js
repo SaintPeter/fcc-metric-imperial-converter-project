@@ -13,11 +13,16 @@ function ConvertHandler() {
 
   const units = {
     'gal': {
-      convert_to: 'l',
+      convert_to: 'L',
       factor: galToL,
       name: 'gallons'
     },
     'l': {
+      convert_to: 'gal',
+      factor: 1/galToL,
+      name: 'liters'
+    },
+    'L': {
       convert_to: 'gal',
       factor: 1/galToL,
       name: 'liters'
@@ -110,6 +115,9 @@ function ConvertHandler() {
 
       // If unit exists, return it
       if(units.hasOwnProperty(unit)) {
+        if(unit === "l") {
+          return "L";
+        }
         return unit;
       }
     }

@@ -80,8 +80,9 @@ suite('Unit Tests', function(){
     
     test('For Each Valid Unit Inputs', function(done) {
       let input = ['gal','l','mi','km','lbs','kg','GAL','L','MI','KM','LBS','KG'];
-      input.forEach(function(ele) {
-        assert. equal(convertHandler.getUnit(1 + ele), ele.toLowerCase())
+      let output = ['gal','L','mi','km','lbs','kg','gal','L','mi','km','lbs','kg'];
+      input.forEach(function(ele,index) {
+        assert.equal(convertHandler.getUnit(1 + ele), output[index])
       });
       done();
     });
@@ -100,10 +101,10 @@ suite('Unit Tests', function(){
   suite('Function convertHandler.getReturnUnit(initUnit)', function() {
     
     test('For Each Valid Unit Inputs', function(done) {
-      let input = ['gal','l','mi','km','lbs','kg'];
-      let expect = ['l','gal','km','mi','kg','lbs'];
+      let input =  ['gal','l'  ,'L',   'mi', 'km', 'lbs','kg'];
+      let expect = ['L'  ,'gal','gal', 'km', 'mi', 'kg' ,'lbs'];
       input.forEach(function(ele, i) {
-        assert.equal(convertHandler.getReturnUnit(ele), expect[i].toLowerCase());
+        assert.equal(convertHandler.getReturnUnit(ele), expect[i]);
       });
       done();
     });
